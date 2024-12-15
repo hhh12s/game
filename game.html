@@ -1,0 +1,138 @@
+import { useState } from 'react';
+
+interface Question {
+  question: string;
+  options: string[];
+  correctAnswer: string;
+}
+
+const questions: Question[] = [
+  {
+    question: 'Что такое пароль?',
+    options: ['Имя пользователя', 'Секретный код', 'Адрес электронной почты'],
+    correctAnswer: 'Секретный код',
+  },
+  {
+    question: 'Зачем нужен антивирус?',
+    options: ['Для защиты от хакеров', 'Для ускорения компьютера', 'Для удаления файлов'],
+    correctAnswer: 'Для защиты от хакеров',
+  },
+  {
+    question: 'Что такое фишинг?',
+    options: ['Вид мошенничества в интернете', 'Вид компьютерного вируса', 'Вид программного обеспечения'],
+    correctAnswer: 'Вид мошенничества в интернете',
+  },
+  {
+    question: 'Какой из следующих вариантов является безопасным способом хранения паролей?',
+    options: ['В блокноте на столе', 'В зашифрованном файле на компьютере', 'На бумажке в кошельке'],
+    correctAnswer: 'В зашифрованном файле на компьютере',
+  },
+  {
+    question: 'Что такое двухфакторная аутентификация?',
+    options: ['Вид пароля', 'Вид антивируса', 'Метод подтверждения личности с помощью двух факторов'],
+    correctAnswer: 'Метод подтверждения личности с помощью двух факторов',
+  },
+  {
+    question: 'Зачем нужен брандмауэр?',
+    options: ['Для защиты от хакеров', 'Для ускорения компьютера', 'Для удаления файлов'],
+    correctAnswer: 'Для защиты от хакеров',
+  },
+  {
+    question: 'Что такое HTTPS?',
+    options: ['Протокол передачи гипертекста', 'Протокол защищенной передачи гипертекста', 'Протокол передачи файлов'],
+    correctAnswer: 'Протокол защищенной передачи гипертекста',
+  },
+  {
+    question: 'Какой из следующих вариантов является безопасным способом передачи данных?',
+    options: ['Через незащищенную сеть Wi-Fi', 'Через защищенную сеть Wi-Fi', 'Через Bluetooth'],
+    correctAnswer: 'Через защищенную сеть Wi-Fi',
+  },
+  {
+    question: 'Что такое шифрование?',
+    options: ['Вид пароля', 'Вид антивируса', 'Метод защиты данных с помощью кодирования'],
+    correctAnswer: 'Метод защиты данных с помощью кодирования',
+  },
+  {
+    question: 'Зачем нужен обновление программного обеспечения?',
+    options: ['Для добавления новых функций', 'Для исправления ошибок и уязвимостей', 'Для удаления файлов'],
+    correctAnswer: 'Для исправления ошибок и уязвимостей',
+  },
+];
+
+function InternetSecurityGame() {
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [score, setScore] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState('');
+
+  const handleAnswerSelect = (answer: string) => {
+    setSelectedAnswer(answer);
+  };
+
+  const handleNextQuestion = () => {
+    if (selectedAnswer === questions[currentQuestion].correctAnswer) {
+      setScore(score + 1);
+    }
+    setCurrentQuestion(currentQuestion + 1);
+    setSelectedAnswer('');
+  };
+
+  const handleRestart = () => {
+    setCurrentQuestion(0);
+    setScore(0);
+    setSelectedAnswer('');
+  };
+
+  if (currentQuestion >= questions.length) {
+    return (
+      <div className="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md text-center">
+        <h2 className="text-lg font-bold mb-2 text-green-500">Поздравляем!</h2>
+        <p className="mb-4 text-lg font-bold">Вы завершили игру!</p>
+        <p className="mb-4 text-lg font-bold">Ваш результат: {score} из {questions.length}</p>
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleRestart}>
+          Начать заново
+        </button>
+        <div className="confetti-container">
+          <div className="confetti"></div>
+          <div className="confetti"></div>
+          <div className="confetti"></div>
+          <div className="confetti"></div>
+          <div className="confetti"></div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md">
+      <h2 className="text-lg font-bold mb-2">{questions[currentQuestion].question}</h2>
+      <ul>
+        {questions[currentQuestion].options.map((option, index) => (
+          <li key={index} className="mb-2">
+            <button
+              className={`w-full text-left ${selectedAnswer === option ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'} py-2 px-4 rounded`}
+              onClick={() => handleAnswerSelect(option)}
+            >
+              {option}
+            </button>
+          </li>
+        ))}
+      </ul>
+      <button
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        onClick={handleNextQuestion}
+        disabled={!selectedAnswer}
+      >
+        Далее
+      </button>
+      <p className="mt-4 text-lg font-bold">Ваш результат: {score} из {currentQuestion + 1}</p>
+      <div className="progress-bar w-full bg-gray-200 h-4 rounded-full">
+        <div className="progress-bar-filled bg-blue-500 h-4 rounded-full" style={{ width: `${(currentQuestion + 1) / questions.length * 100}%` }}></div>
+      </div>
+      <div className="question-number-container">
+        <p className="question-number">{currentQuestion + 1} из {questions.length}</p>
+      </div>
+    </div>
+  );
+}
+
+export default InternetSecurityGame;
